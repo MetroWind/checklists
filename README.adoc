@@ -1,0 +1,9 @@
+== Deployment
+
+1. Create a checklist YAML file or use one in the `checklists`
+directory
+2. Copy all files in the `src` directory to a directory (let’s call it
+the HTTP directory).
+3. Copy the checklist YAML file that you want to use to the HTTP
+directory, and rename the YAML file to `checklist.yaml`.
+4. Serve all files in the HTTP directory as static files.
