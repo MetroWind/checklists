@@ -217,6 +217,7 @@ async function run()
     let app_body = ReactDOM.createRoot(document.getElementById('AppWrapper'));
     let data = await loadData();
     let data_with_state = await loadStates(data);
+    document.title = "Checklist: " + data.title;
     app_body.render(e(AllPagesView, { data: data_with_state }));
 }
 
