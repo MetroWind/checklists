@@ -89,10 +89,15 @@ function unpackBools(s)
     return bools;
 }
 
-function savePageState(page)
+function saveKeyName(checklist_short_name, page_short_name)
+{
+    return `checklist-page_data-${checklist_short_name}-${page_short_name}`;
+}
+
+function savePageState(checklist_short_name, page)
 {
     const save_data = packBools(extractCheckedState(page));
-    localStorage.setItem("page_data-" + page.short_name, save_data);
+    localStorage.setItem(saveKeyName(checklist_short_name, page.short_name), save_data);
 }
 
 // ========== Views =================================================>
@@ -143,12 +148,12 @@ function SectionView({section, onChange})
              e("ul", {}, views));
 }
 
-function PageView({page, onChange})
+function PageView({checklist_short_name, page, onChange})
 {
     function onPageChange()
     {
         onChange();
-        savePageState(page);
+        savePageState(checklist_short_name, page);
     }
     let views = page.sections.map((sec, i) =>
         e(SectionView, {key: i, section: sec, onChange: onPageChange}));
@@ -177,14 +182,16 @@ function AllPagesView({data})
              e("header", {},
                e("h1", {}, data.title),
                e("ul", {id: "PageTabs"}, page_tabs)),
-             e(PageView, {page: data.pages[page_index], onChange: () => {}}));
+             e(PageView, {checklist_short_name: data.short_name,
+                          page: data.pages[page_index],
+                          onChange: () => {}}));
 }
 
 async function loadStates(data)
 {
     for(var page of data.pages)
     {
-        const saved = await localStorage.getItem("page_data-" + page.short_name);
+        const saved = await localStorage.getItem(saveKeyName(data.short_name, page.short_name));
         if(saved !== null)
         {
             applyCheckedState(page, unpackBools(saved));
